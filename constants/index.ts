@@ -1,4 +1,4 @@
-import { FilePlus2, Layout, List } from "lucide-react";
+import { Building2, FilePlus2, Layout, List } from "lucide-react";
 
 export const sidebarLinks = [
   {
@@ -15,5 +15,10 @@ export const sidebarLinks = [
     icon: FilePlus2,
     lable: "Create",
     href: "/create",
+  },
+  {
+    icon: Building2,
+    lable: "Business",
+    href: "/business",
   },
 ];

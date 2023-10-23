@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { ModeToggle } from "./ModeToggle";
+import MobileMenu from "./MobileMenu";
 
 function HeaderMenuRight() {
   return (
@@ -16,9 +17,9 @@ function HeaderMenuRight() {
 
 const Header = () => {
   return (
-    <header className="sticky top-0 z-50 flex items-center bg-gray-0/80 px-4 py-6  backdrop-blur-xl dark:bg-black md:px-5 lg:px-6 2xl:py-5 3xl:px-8 4xl:px-10  ">
+    <header className="sticky top-0 z-50 flex items-center bg-gray-0/80 px-4 py-4  backdrop-blur-xl dark:bg-black md:px-5 lg:px-6 2xl:py-5 3xl:px-8 4xl:px-10  ">
       <div className="flex w-full max-w-2xl items-center lg:hidden">
-        <Menu className="me-3 h-auto w-auto p-0 sm:me-4 xl:hidden " />
+        <MobileMenu />
 
         <Link href="/" className="me-4 w-9 shrink-0 lg:me-5 xl:hidden">
           <Image
@@ -26,6 +27,14 @@ const Header = () => {
             alt="Bill Claviq"
             width={100}
             height={56}
+            className="cursor-pointer dark:hidden"
+          />
+          <Image
+            src="/billClaviq-icon-dark.png"
+            alt="Bill Claviq"
+            width={100}
+            height={56}
+            className="cursor-pointer hidden dark:block"
           />
         </Link>
       </div>
