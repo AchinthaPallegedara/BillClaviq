@@ -1,4 +1,4 @@
-import { Layout } from "lucide-react";
+import { FilePlus2, Layout, List } from "lucide-react";
 
 export const sidebarLinks = [
   {
@@ -7,13 +7,13 @@ export const sidebarLinks = [
     href: "/",
   },
   {
-    icon: Layout,
-    lable: "list",
+    icon: List,
+    lable: "List",
     href: "/layout",
   },
   {
-    icon: Layout,
-    lable: "Create New",
+    icon: FilePlus2,
+    lable: "Create",
     href: "/create",
   },
 ];

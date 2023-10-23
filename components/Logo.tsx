@@ -10,6 +10,14 @@ const Logo = (props: Props) => {
         alt="Picture of the author"
         width={200}
         height={52}
+        className="cursor-pointer dark:hidden"
+      />
+      <Image
+        src="/billClaviq-logo-dark.png"
+        alt="Picture of the author"
+        width={200}
+        height={52}
+        className="cursor-pointer hidden dark:block"
       />
     </Link>
   );

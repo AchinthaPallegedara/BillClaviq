@@ -14,7 +14,7 @@ const SideBraRoutes = () => {
         <SidebraItem
           key={route.href}
           icon={route.icon}
-          lable={route.lable}
+          label={route.lable}
           href={route.href}
         />
       ))}
