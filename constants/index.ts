@@ -22,3 +22,20 @@ export const sidebarLinks = [
     href: "/business",
   },
 ];
+
+export const invoicePageHeader = {
+  title: "Create Invoice",
+  breadcrumb: [
+    {
+      href: "/",
+      name: "Home",
+    },
+    {
+      href: "/list",
+      name: "Invoice",
+    },
+    {
+      name: "Create",
+    },
+  ],
+};
