@@ -4,6 +4,12 @@ import z from "zod";
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import {
+  AlertCircle,
+  CheckCircle,
+  HelpCircle,
+  MinusCircle,
+} from "lucide-react";
 
 // form zod validation schema
 export const invoiceFormSchema = z.object({
@@ -60,7 +66,7 @@ export const statusOptions = [
     name: "Paid",
     label: (
       <div className="flex items-center">
-        <Badge color="success" />
+        <CheckCircle className="p-0.5 text-green-700" />
         <p className="ms-2 font-medium text-green-700">Paid</p>
       </div>
     ),
@@ -70,8 +76,8 @@ export const statusOptions = [
     name: "Pending",
     label: (
       <div className="flex items-center">
-        <Badge color="warning" />
-        <p className="ms-2 font-medium text-orange-700">Pending</p>
+        <HelpCircle className="p-0.5 text-orange-400" />
+        <p className="ms-2 font-medium text-orange-400">Pending</p>
       </div>
     ),
   },
@@ -80,8 +86,8 @@ export const statusOptions = [
     name: "Overdue",
     label: (
       <div className="flex items-center">
-        <Badge color="danger" />
-        <p className="ms-2 font-medium text-red-700">Overdue</p>
+        <AlertCircle className="p-0.5 text-red-500" />
+        <p className="ms-2 font-medium text-red-500">Overdue</p>
       </div>
     ),
   },
@@ -90,7 +96,7 @@ export const statusOptions = [
     name: "Draft",
     label: (
       <div className="flex items-center">
-        <Badge className="bg-gray-400" />
+        <MinusCircle className="p-0.5 text-gray-600" />
         <p className="ms-2 font-medium text-gray-600">Draft</p>
       </div>
     ),

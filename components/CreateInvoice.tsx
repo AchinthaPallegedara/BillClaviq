@@ -4,6 +4,7 @@ import {
   FormBlockWrapper,
   InvoiceFormTypes,
   invoiceFormSchema,
+  statusOptions,
 } from "./formUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -13,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -30,8 +30,17 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Link } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import FormFooter from "./FormFooter";
+import AddInvoiceItems from "./AddInvoiceItems";
 
 const invoiceItems = [{ item: "", description: "", quantity: 1, price: "" }];
 
@@ -62,6 +71,7 @@ const CreateInvoice = ({
       invoiceNumber: "INV-0071",
       createDate: new Date(),
       status: "draft",
+      dueDate: new Date(),
     },
   });
 
@@ -136,7 +146,7 @@ const CreateInvoice = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-grow flex-col @container [&_label]:font-medium"
+        className="flex flex-grow flex-col container [&_label]:font-medium"
       >
         <div className="flex-grow pb-10">
           <div className="grid grid-cols-1 gap-8 divide-y divide-dashed divide-gray-200 2xl:gap-10 3xl:gap-12">
@@ -257,76 +267,159 @@ const CreateInvoice = ({
               description={"To he who will receive this invoice"}
               className="pt-7 2xl:pt-9 3xl:pt-11 "
             >
-              <div className="col-span-2 grid grid-cols-1 items-baseline gap-5 lg:grid-cols-2 5xl:grid-cols-4 border-2 border-red-700">
-                <FormField
-                  control={form.control}
-                  name="invoiceNumber"
-                  render={({ field }) => (
-                    <>
-                      <FormItem>
-                        <FormLabel>Invoice Number</FormLabel>
-                        <FormControl>
-                          <Input disabled {...field} />
-                        </FormControl>
-
-                        <FormMessage />
-                      </FormItem>
-                    </>
-                  )}
-                />
-                <div className="[&>.react-datepicker-wrapper]:w-full border-2 border-red-500">
+              <div className="col-span-2">
+                <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
                   <FormField
                     control={form.control}
-                    name="createDate"
+                    name="invoiceNumber"
                     render={({ field }) => (
                       <>
-                        <FormItem className="[&>.react-datepicker-wrapper]:w-full">
-                          <FormLabel>Date Create</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant={"outline"}
-                                  className={cn(
-                                    " text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    format(field.value, "PPP")
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
-                            >
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) =>
-                                  date > new Date() ||
-                                  date < new Date("1900-01-01")
-                                }
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
+                        <FormItem>
+                          <FormLabel>Invoice Number</FormLabel>
+                          <FormControl>
+                            <Input disabled {...field} />
+                          </FormControl>
 
                           <FormMessage />
                         </FormItem>
                       </>
                     )}
                   />
+                  <div className="w-full ">
+                    <FormField
+                      control={form.control}
+                      name="createDate"
+                      render={({ field }) => (
+                        <>
+                          <FormItem className="w-full">
+                            <FormLabel>Date Create</FormLabel>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button
+                                    variant={"outline"}
+                                    className={cn(
+                                      " text-left font-normal",
+                                      !field.value && "text-muted-foreground"
+                                    )}
+                                  >
+                                    {/* <CalendarIcon className="mr-2 h-4 w-full opacity-50" /> */}
+                                    {field.value ? (
+                                      format(field.value, "PPP")
+                                    ) : (
+                                      <span>Pick a date</span>
+                                    )}
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+                              <PopoverContent
+                                className="w-auto p-0"
+                                align="start"
+                              >
+                                <Calendar
+                                  mode="single"
+                                  selected={field.value}
+                                  onSelect={field.onChange}
+                                  disabled={(date) =>
+                                    date > new Date("2200-01-01") ||
+                                    date < new Date("1900-01-01")
+                                  }
+                                  initialFocus
+                                />
+                              </PopoverContent>
+                            </Popover>
+
+                            <FormMessage />
+                          </FormItem>
+                        </>
+                      )}
+                    />
+                  </div>
+                  <div className="w-full ">
+                    <FormField
+                      control={form.control}
+                      name="dueDate"
+                      render={({ field }) => (
+                        <>
+                          <FormItem className="w-full">
+                            <FormLabel>Due Date</FormLabel>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button
+                                    variant={"outline"}
+                                    className={cn(
+                                      " text-left font-normal",
+                                      !field.value && "text-muted-foreground"
+                                    )}
+                                  >
+                                    {/* <CalendarIcon className="mr-2 h-4 w-full opacity-50 " /> */}
+                                    {field.value ? (
+                                      format(field.value, "PPP")
+                                    ) : (
+                                      <span>Select a date</span>
+                                    )}
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+                              <PopoverContent
+                                className="w-auto p-0"
+                                align="start"
+                              >
+                                <Calendar
+                                  mode="single"
+                                  selected={field.value}
+                                  onSelect={field.onChange}
+                                  disabled={(date) =>
+                                    date > new Date("2200-01-01") ||
+                                    date < new Date()
+                                  }
+                                  initialFocus
+                                />
+                              </PopoverContent>
+                            </Popover>
+
+                            <FormMessage />
+                          </FormItem>
+                        </>
+                      )}
+                    />
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem className=" w-full">
+                        <FormLabel>Status</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {statusOptions.map((route) => (
+                              <SelectItem key={route.value} value={route.value}>
+                                {route.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
               </div>
             </FormBlockWrapper>
+            <AddInvoiceItems />
           </div>
         </div>
+        <FormFooter submitBtnText={id ? "Update Invoice" : "Create Invoice"} />
       </form>
     </Form>
   );
