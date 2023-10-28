@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon, Link } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Select,
@@ -285,14 +285,14 @@ const CreateInvoice = ({
                       </>
                     )}
                   />
-                  <div className="w-full ">
+                  <div className="w-full  ">
                     <FormField
                       control={form.control}
                       name="createDate"
                       render={({ field }) => (
                         <>
-                          <FormItem className="w-full">
-                            <FormLabel>Date Create</FormLabel>
+                          <FormItem className="w-full max-sm:flex max-sm:flex-col">
+                            <FormLabel>Date Create </FormLabel>
                             <Popover>
                               <PopoverTrigger asChild>
                                 <FormControl>
@@ -341,7 +341,7 @@ const CreateInvoice = ({
                       name="dueDate"
                       render={({ field }) => (
                         <>
-                          <FormItem className="w-full">
+                          <FormItem className="w-full max-sm:flex max-sm:flex-col">
                             <FormLabel>Due Date</FormLabel>
                             <Popover>
                               <PopoverTrigger asChild>

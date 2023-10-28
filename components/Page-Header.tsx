@@ -23,7 +23,7 @@ const PageHeader = ({
     >
       <div>
         <h2
-          className={`mb-2 text-[22px] lg:text-2xl 4xl:text-[26px]  font-semibold text-gray-900  text-2xl dark:text-gray-800 2xl:text-[26px] 4xl:text-3xl ${lexend.className}`}
+          className={`mb-2 text-[22px] lg:text-2xl 4xl:text-[26px]  font-semibold text-gray-900  text-2xl dark:text-white 2xl:text-[26px] 4xl:text-3xl ${lexend.className}`}
         >
           {title}
         </h2>

@@ -19,7 +19,7 @@ export default function FormFooter({
   return (
     <div
       className={cn(
-        "sticky bottom-0 left-0 right-0 -mb-8 flex items-center justify-end gap-4 border-t bg-white px-4 py-4 dark:bg-gray-50 md:px-5 lg:px-6 3xl:px-8 4xl:px-10",
+        "sticky bottom-0 left-0 right-0 -mb-8 flex items-center justify-end gap-4 border-t bg-white px-4 py-4 dark:bg-black md:px-5 lg:px-6 3xl:px-8 4xl:px-10",
         className,
         negMargin
       )}
@@ -27,10 +27,7 @@ export default function FormFooter({
       <Button type="submit" variant="outline" className="w-full xl:w-auto">
         {draftBtnText}
       </Button>
-      <Button
-        type="submit"
-        className="w-full xl:w-auto dark:bg-gray-100 dark:text-white dark:active:bg-gray-100"
-      >
+      <Button type="submit" className="w-full xl:w-auto">
         {submitBtnText}
       </Button>
     </div>
