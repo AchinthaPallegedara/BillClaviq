@@ -291,7 +291,7 @@ const CreateInvoice = ({
                       name="createDate"
                       render={({ field }) => (
                         <>
-                          <FormItem className="w-full max-sm:flex max-sm:flex-col">
+                          <FormItem className="w-full max-lg:flex max-lg:flex-col max-lg:mt-2.5">
                             <FormLabel>Date Create </FormLabel>
                             <Popover>
                               <PopoverTrigger asChild>
@@ -341,7 +341,7 @@ const CreateInvoice = ({
                       name="dueDate"
                       render={({ field }) => (
                         <>
-                          <FormItem className="w-full max-sm:flex max-sm:flex-col">
+                          <FormItem className="w-full max-lg:flex max-lg:flex-col max-lg:mt-2.5">
                             <FormLabel>Due Date</FormLabel>
                             <Popover>
                               <PopoverTrigger asChild>

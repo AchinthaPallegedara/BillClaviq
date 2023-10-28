@@ -17,7 +17,7 @@ const PageHeader = ({
   return (
     <header
       className={cn(
-        " mb-6 flex flex-col lg:flex-row lg:items-center lg:justify-between xs:-mt-2 lg:mb-7",
+        " mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between xs:-mt-2 sm:mb-7",
         className
       )}
     >

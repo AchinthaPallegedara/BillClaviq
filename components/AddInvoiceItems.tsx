@@ -85,19 +85,23 @@ const AddInvoiceItems = () => {
                 <Input type="number" id="quantity" placeholder="50" />
               </div>
             </div>
-            <div className="ms-auto mt-6 grid w-full gap-3.5 text-sm text-gray-600 xl:max-w-xs">
+            <div className="ms-auto mt-6 grid w-full gap-3.5 text-sm text-gray-600 dark:text-gray-400 xl:max-w-xs">
               <p className="flex items-center justify-between">
                 Subtotal:{" "}
-                <span className="font-medium text-gray-700">$ 50</span>
+                <span className="font-medium text-gray-700 dark:text-gray-300">
+                  $ 50
+                </span>
               </p>
               <p className="flex items-center justify-between">
                 Discount:{" "}
-                <span className="font-medium text-gray-700">$ 15</span>
+                <span className="font-medium text-gray-700 dark:text-gray-300">
+                  $ 15
+                </span>
               </p>
               <p className="flex items-center justify-between">
-                Taxes: <span className="font-medium text-red">--</span>
+                Taxes: <span className="font-medium text-red-500">--</span>
               </p>
-              <p className="flex items-center justify-between text-base font-semibold text-gray-900">
+              <p className="flex items-center justify-between text-base font-semibold text-gray-900 dark:text-gray-50">
                 Total: <span>$ 120</span>
               </p>
             </div>

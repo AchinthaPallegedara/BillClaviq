@@ -115,13 +115,13 @@ export function FormBlockWrapper({
 }>) {
   return (
     <section className={cn("grid grid-cols-6", className)}>
-      <header className="col-span-2 mb-6 5xl:mb-0">
+      <header className="col-span-2 mb-6 5xl:mb-0 max-lg:col-span-6">
         <h5 className="font-semibold">{title}</h5>
         {description ? (
           <p className="mt-1 text-sm text-gray-500">{description}</p>
         ) : null}
       </header>
-      <div className="col-span-4 grid grid-cols-2 gap-3 lg:gap-4 2xl:gap-5">
+      <div className="col-span-4 max-lg:col-span-6 grid grid-cols-2 gap-3 lg:gap-4 2xl:gap-5  ">
         {children}
       </div>
     </section>
