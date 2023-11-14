@@ -9,7 +9,7 @@ export const sidebarLinks = [
   {
     icon: List,
     lable: "List",
-    href: "/layout",
+    href: "/list",
   },
   {
     icon: FilePlus2,
@@ -39,3 +39,60 @@ export const invoicePageHeader = {
     },
   ],
 };
+
+export const groups = [
+  {
+    label: "Person",
+    teams: [
+      {
+        label: "Alicia Koch",
+        value: "personal",
+      },
+    ],
+  },
+  {
+    label: "Company",
+    teams: [
+      {
+        label: "Acme Inc.",
+        value: "acme-inc",
+      },
+      {
+        label: "Monsters Inc.",
+        value: "monsters",
+      },
+      {
+        label: "Tech Solutions",
+        value: "tech-solutions",
+      },
+      {
+        label: "Galactic Innovators",
+        value: "galactic-innovators",
+      },
+      {
+        label: "Creative Minds",
+        value: "creative-minds",
+      },
+      {
+        label: "Alpha Developers",
+        value: "alpha-developers",
+      },
+      {
+        label: "Solar Explorers",
+        value: "solar-explorers",
+      },
+      {
+        label: "Digital Pioneers",
+        value: "digital-pioneers",
+      },
+      {
+        label: "Infinite Horizons",
+        value: "infinite-horizons",
+      },
+      {
+        label: "Data Wizards",
+        value: "data-wizards",
+      },
+    ],
+  },
+];

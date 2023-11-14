@@ -10,7 +10,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -19,40 +18,84 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+
 import { toast } from "react-hot-toast";
-import { useState } from "react";
+
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import FormFooter from "./FormFooter";
 import AddInvoiceItems from "./AddInvoiceItems";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "@/components/ui/command";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Check, ChevronsUpDown, PlusCircle } from "lucide-react";
+import { groups } from "@/constants";
+import { useState } from "react";
+
+type Team = (typeof groups)[number]["teams"][number];
+
+type PopoverTriggerProps = React.ComponentPropsWithoutRef<
+  typeof PopoverTrigger
+>;
+
+interface TeamSwitcherProps extends PopoverTriggerProps {
+  id?: string;
+  record?: InvoiceFormTypes;
+}
 
 const invoiceItems = [{ item: "", description: "", quantity: 1, price: "" }];
 
-const CreateInvoice = ({
-  id,
-  record,
-}: {
-  id?: string;
-  record?: InvoiceFormTypes;
-}) => {
+const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
   const [reset, setReset] = useState({});
   const [isLoading, setLoading] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
+  const [selectedTeam, setSelectedTeam] = React.useState<Team>(
+    groups[0].teams[0]
+  );
+  const [isClicked, setIsClicked] = useState(false);
+
+  const handleClick = () => {
+    setIsClicked(!isClicked);
+  };
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof invoiceFormSchema>>({
@@ -162,7 +205,34 @@ const CreateInvoice = ({
                     <FormItem>
                       <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter your name" {...field} />
+                        <Select>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select your name" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel className="text-muted-foreground ml-[-20px] text-[12px]">
+                                User name
+                              </SelectLabel>
+                              <SelectItem value="free">
+                                <span className="font-medium">
+                                  Achintha Pallegedara
+                                </span>
+                              </SelectItem>
+                              <SelectLabel className="text-muted-foreground ml-[-20px] text-[12px]">
+                                Company name
+                              </SelectLabel>
+                              <SelectItem value="pro">
+                                <span className="font-medium">Claviq</span>
+                              </SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                        {/* <Input
+                          disabled
+                          placeholder="Enter your name"
+                          {...field}
+                        /> */}
                       </FormControl>
 
                       <FormMessage />
@@ -178,10 +248,13 @@ const CreateInvoice = ({
                     <FormItem>
                       <FormLabel>Phone Number</FormLabel>
                       <FormControl>
-                        <Input type="tel" onInput={phoneMask} {...field} />
+                        <Input
+                          disabled
+                          type="tel"
+                          onInput={phoneMask}
+                          {...field}
+                        />
                       </FormControl>
-
-                      <FormMessage />
                     </FormItem>
                   </>
                 )}
@@ -194,7 +267,11 @@ const CreateInvoice = ({
                     <FormItem className="col-span-2">
                       <FormLabel>Address</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Enter your address" {...field} />
+                        <Textarea
+                          disabled
+                          placeholder="Enter your address"
+                          {...field}
+                        />
                       </FormControl>
 
                       <FormMessage />
@@ -216,7 +293,119 @@ const CreateInvoice = ({
                     <FormItem>
                       <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter your name" {...field} />
+                        <Dialog
+                          open={showNewTeamDialog}
+                          onOpenChange={setShowNewTeamDialog}
+                        >
+                          <Popover open={open} onOpenChange={setOpen}>
+                            <PopoverTrigger asChild>
+                              <Input
+                                type="search"
+                                placeholder={"Enter the name"}
+                                value={selectedTeam.label}
+                                role="combobox"
+                                aria-expanded={open}
+                                readOnly
+                              />
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[350px] p-0 ">
+                              <Command>
+                                <CommandList>
+                                  <CommandInput placeholder="Search team..." />
+                                  <CommandEmpty>
+                                    No customer found.
+                                  </CommandEmpty>
+                                  {groups.map((group) => (
+                                    <CommandGroup
+                                      key={group.label}
+                                      heading={group.label}
+                                    >
+                                      {group.teams.map((team) => (
+                                        <CommandItem
+                                          key={team.value}
+                                          onSelect={() => {
+                                            setSelectedTeam(team);
+                                            setOpen(false);
+                                          }}
+                                          className="text-sm"
+                                        >
+                                          <Avatar className="mr-2 h-5 w-5">
+                                            <AvatarImage
+                                              src={`https://avatar.vercel.sh/${team.value}.png`}
+                                              alt={team.label}
+                                              className="grayscale"
+                                            />
+                                            <AvatarFallback>SC</AvatarFallback>
+                                          </Avatar>
+                                          {team.label}
+                                          <Check
+                                            className={cn(
+                                              "ml-auto h-4 w-4",
+                                              selectedTeam.value === team.value
+                                                ? "opacity-100"
+                                                : "opacity-0"
+                                            )}
+                                          />
+                                        </CommandItem>
+                                      ))}
+                                    </CommandGroup>
+                                  ))}
+                                </CommandList>
+                                <CommandSeparator />
+                                <CommandList>
+                                  <CommandGroup>
+                                    <DialogTrigger asChild>
+                                      <CommandItem
+                                        onSelect={() => {
+                                          setOpen(false);
+                                          setShowNewTeamDialog(true);
+                                        }}
+                                      >
+                                        <PlusCircle className="mr-2 h-5 w-5" />
+                                        Add customer
+                                      </CommandItem>
+                                    </DialogTrigger>
+                                  </CommandGroup>
+                                </CommandList>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle> Add customer</DialogTitle>
+                              <DialogDescription>
+                                Add a new customer to the system.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div>
+                              <div className="space-y-4 py-2 pb-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="name">Customer name</Label>
+                                  <Input
+                                    id="Cus_name"
+                                    placeholder="Achintha Hirudika."
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="plan">Company name</Label>
+                                  <Input
+                                    id="Com_name"
+                                    placeholder="Claviq Inc."
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <DialogFooter>
+                              <Button
+                                variant="outline"
+                                onClick={() => setShowNewTeamDialog(false)}
+                              >
+                                Cancel
+                              </Button>
+                              <Button type="submit">Continue</Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
                       </FormControl>
 
                       <FormMessage />
