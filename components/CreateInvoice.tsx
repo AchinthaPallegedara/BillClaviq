@@ -228,11 +228,6 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
                             </SelectGroup>
                           </SelectContent>
                         </Select>
-                        {/* <Input
-                          disabled
-                          placeholder="Enter your name"
-                          {...field}
-                        /> */}
                       </FormControl>
 
                       <FormMessage />
@@ -395,7 +390,7 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
                                 </div>
                               </div>
                             </div>
-                            <DialogFooter>
+                            <DialogFooter className="gap-2">
                               <Button
                                 variant="outline"
                                 onClick={() => setShowNewTeamDialog(false)}

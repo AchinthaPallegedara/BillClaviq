@@ -1,4 +1,4 @@
-import { Building2, FilePlus2, Layout, List } from "lucide-react";
+import { Building2, Layout, Receipt, Users } from "lucide-react";
 
 export const sidebarLinks = [
   {
@@ -7,14 +7,15 @@ export const sidebarLinks = [
     href: "/",
   },
   {
-    icon: List,
-    lable: "List",
-    href: "/list",
+    icon: Receipt,
+    lable: "Invoice",
+    href: "/invoice",
   },
+
   {
-    icon: FilePlus2,
-    lable: "Create",
-    href: "/create",
+    icon: Users,
+    lable: "Customers",
+    href: "/customers",
   },
   {
     icon: Building2,
@@ -31,11 +32,62 @@ export const invoicePageHeader = {
       name: "Home",
     },
     {
-      href: "/list",
+      href: "/invoice",
       name: "Invoice",
     },
     {
       name: "Create",
+    },
+  ],
+};
+
+export const customersPageHeader = {
+  title: "Customers List",
+  breadcrumb: [
+    {
+      href: "/",
+      name: "Home",
+    },
+    {
+      href: "/customers",
+      name: "Customers",
+    },
+    {
+      name: "List",
+    },
+  ],
+};
+
+export const invoiceListPageHeader = {
+  title: "Invoice List",
+  breadcrumb: [
+    {
+      href: "/",
+      name: "Home",
+    },
+    {
+      href: "/invoice",
+      name: "Invoice",
+    },
+    {
+      name: "List",
+    },
+  ],
+};
+
+export const customerAddPageHeader = {
+  title: "Add Customer",
+  breadcrumb: [
+    {
+      href: "/",
+      name: "Home",
+    },
+    {
+      href: "/customers",
+      name: "Customers",
+    },
+    {
+      name: "Add",
     },
   ],
 };
