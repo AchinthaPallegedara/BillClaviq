@@ -91,11 +91,6 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
   const [selectedTeam, setSelectedTeam] = React.useState<Team>(
     groups[0].teams[0]
   );
-  const [isClicked, setIsClicked] = useState(false);
-
-  const handleClick = () => {
-    setIsClicked(!isClicked);
-  };
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof invoiceFormSchema>>({

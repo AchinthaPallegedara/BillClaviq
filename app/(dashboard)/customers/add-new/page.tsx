@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { customerAddPageHeader } from "@/constants";
 import { ArrowDownToLine } from "lucide-react";
 import React from "react";
+import { AddCustomer } from "@/components/AddCustomer";
 
 const page = () => {
   return (
@@ -16,6 +17,7 @@ const page = () => {
           Import
         </Button>
       </PageHeader>
+      <AddCustomer />
     </>
   );
 };

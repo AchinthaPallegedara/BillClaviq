@@ -8,51 +8,59 @@ generator client {
 }
 
 model Company {
-  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  id          String     @id @default(uuid()) @map("_id")
+  clerkId     String
   name        String
-  phoneNumber String?
+  phoneNumber String?    @unique
   address     String?
   logo        String?
-  userId      String        
-  invoices    Invoice[]     @relation("From")
-  customers    Customer[] @relation("From")
-}
-
-model Invoice {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  invoiceNumber String    @unique
-  issueDate     DateTime
-  dueDate       DateTime?
-  status        InvoiceStatus
-  discount      Float? @default(0.00)
-  tax           Float? @default(0.00)
-  subtotal      Float
-  total         Float
-  items         Item[]
-  company       Company   @relation("From", fields: [fromId], references: [id], onDelete: Cascade)
-  fromId        String    @db.ObjectId
-  to            Customer @relation("To", fields: [toId], references: [id])
-  toId          String    @db.ObjectId
-}
-
-model Item {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  description String?
-  quantity    Int @default(1)
-  price       Float
-  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-  invoiceId   String   @db.ObjectId
+  Invoice     Invoice[]
+  Customers   Customer[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model Customer {
-  id           String  @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  companyName  String?
-  phoneNumber  String?
-  address      String?
-  company      Company @relation("From", fields: [fromId], references: [id], onDelete: Cascade)
-  fromId       String    @db.ObjectId
-  invoicesTo   Invoice[] @relation("To")
+  id               String    @id @default(uuid()) @map("_id")
+  customerName     String
+  companyName      String?
+  customerPhone    String    @unique
+  customerAddress  String?
+  customerEmail    String?
+  customerMoreInfo String?
+  invoice          Invoice[]
+  customerOf       Company   @relation(fields: [customerOfId], references: [id], onDelete: Cascade)
+  customerOfId     String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model Invoice {
+  id            String        @id @default(uuid()) @map("_id")
+  invoiceNumber String        @unique
+  issueDate     DateTime
+  dueDate       DateTime?
+  status        InvoiceStatus @default(DRAFT)
+  Items         Items[]
+  discount      Float?        @default(0.00)
+  tax           Float?        @default(0.00)
+  subtotal      Float
+  total         Float
+  to            Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId    String
+  from          Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId     String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Items {
+  id          String  @id @default(uuid()) @map("_id")
+  description String?
+  quantity    Int     @default(1)
+  price       Float
+  Invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId   String
 }
 
 enum InvoiceStatus {
