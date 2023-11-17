@@ -6,8 +6,13 @@ import { customerData } from "@/data/customer-data";
 import { UserPlus } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { columns } from "./columns";
+import { DataTable } from "./data-table";
+import { getCustomers } from "@/lib/models/customer.model";
 
-const page = () => {
+export default async function page() {
+  const data = await getCustomers();
+
   return (
     <>
       <PageHeader
@@ -31,8 +36,9 @@ const page = () => {
           </Link>
         </div>
       </PageHeader>
+      <div className="container mx-auto py-10">
+        <DataTable columns={columns} data={data} />
+      </div>
     </>
   );
-};
-
-export default page;
+}

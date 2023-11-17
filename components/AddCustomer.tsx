@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import axios from "axios";
+
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,34 +19,36 @@ import { FormBlockWrapper } from "./formUtils";
 import { Textarea } from "./ui/textarea";
 import { createCustomer } from "@/lib/models/customer.model";
 import { useUser } from "@clerk/nextjs";
+import Link from "next/link";
+import { useToast } from "./ui/use-toast";
 
 const formSchema = z.object({
-  customerName: z.string().min(2, {
+  name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  companyName: z
+  company: z
     .string()
     // .min(2, {
     //   message: "Name must be at least 2 characters.",
     // })
     .optional(),
-  customerAddress: z
+  address: z
     .string()
     // .min(5, {
     //   message: "Address must be at least 5 characters.",
     // })
     .optional(),
-  customerPhone: z.string().min(10, {
+  phone: z.string().min(10, {
     message: "Phone number must be at least 10 characters.",
   }),
-  customerEmail: z
+  email: z
     .string()
     // .email({
     //   message: "Please enter a valid email.",
     // })
     .optional(),
 
-  customerMoreInfo: z
+  moreInfo: z
     .string()
     // .min(10, {
     //   message: "More details must be at least 10 characters.",
@@ -57,6 +59,7 @@ const formSchema = z.object({
 export function AddCustomer() {
   const router = useRouter();
   const { user } = useUser();
+  const { toast } = useToast();
   let userId: string;
   if (user) {
     userId = user.id;
@@ -65,12 +68,12 @@ export function AddCustomer() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      customerName: "",
-      customerPhone: "",
-      companyName: "",
-      customerAddress: "",
-      customerEmail: "",
-      customerMoreInfo: "",
+      name: "",
+      phone: "",
+      company: "",
+      address: "",
+      email: "",
+      moreInfo: "",
     },
   });
 
@@ -81,10 +84,22 @@ export function AddCustomer() {
         ...values,
         customerOfId: userId,
       });
-      console.log("New customer created");
+
+      toast({
+        className:
+          "border-green-500 bg-green-50 dark:bg-green-900 dark:border-green-500",
+        title: "Yeah, Customer added successfully",
+        description: "You can view the customer in the customer list.",
+      });
 
       router.push("/customers/");
     } catch (error) {
+      toast({
+        className:
+          "border-red-500 bg-red-50 dark:bg-red-900 dark:border-red-500",
+        title: "Uh oh! Something went wrong.",
+        description: ` There was a problem with your request.`,
+      });
       console.error(error);
     }
   }
@@ -103,7 +118,7 @@ export function AddCustomer() {
             >
               <FormField
                 control={form.control}
-                name="customerName"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Customer Name</FormLabel>
@@ -117,7 +132,7 @@ export function AddCustomer() {
               />
               <FormField
                 control={form.control}
-                name="companyName"
+                name="company"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Company Name</FormLabel>
@@ -137,7 +152,7 @@ export function AddCustomer() {
             >
               <FormField
                 control={form.control}
-                name="customerPhone"
+                name="phone"
                 render={({ field }) => (
                   <>
                     <FormItem>
@@ -155,7 +170,7 @@ export function AddCustomer() {
               />
               <FormField
                 control={form.control}
-                name="customerEmail"
+                name="email"
                 render={({ field }) => (
                   <>
                     <FormItem>
@@ -173,7 +188,7 @@ export function AddCustomer() {
               />
               <FormField
                 control={form.control}
-                name="customerAddress"
+                name="address"
                 render={({ field }) => (
                   <>
                     <FormItem className="col-span-2">
@@ -196,7 +211,7 @@ export function AddCustomer() {
             >
               <FormField
                 control={form.control}
-                name="customerMoreInfo"
+                name="moreInfo"
                 render={({ field }) => (
                   <>
                     <FormItem className="col-span-2 ">
@@ -218,7 +233,14 @@ export function AddCustomer() {
           </div>
         </div>
 
-        <Button type="submit">Submit</Button>
+        <div className="sticky bottom-0 left-0 right-0 -mb-8 flex items-center justify-end gap-4 border-t bg-white px-4 py-4 dark:bg-black md:px-5 lg:px-6 3xl:px-8 4xl:px-10 -mx-4 md:-mx-5 lg:-mx-6 3xl:-mx-8 4xl:-mx-10">
+          <Link href="/customers/" className="w-full xl:w-auto">
+            <Button variant="outline">Cancle</Button>
+          </Link>
+          <Button type="submit" className="w-full xl:w-auto">
+            Submit
+          </Button>
+        </div>
       </form>
     </Form>
   );
