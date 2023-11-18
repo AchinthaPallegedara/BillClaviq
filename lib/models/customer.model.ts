@@ -49,3 +49,20 @@ export async function getCustomers(): Promise<Customer[]> {
     throw error;
   }
 }
+
+export async function deleteCustomer(id: string) {
+  try {
+    const prisma = new PrismaClient();
+    const customer = await prisma.customer.delete({
+      where: {
+        id: id,
+      },
+    });
+    prisma.$disconnect();
+
+    return customer;
+  } catch (error) {
+    console.log("error", error);
+    return error;
+  }
+}

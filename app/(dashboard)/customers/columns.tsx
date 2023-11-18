@@ -12,9 +12,65 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { deleteCustomer } from "@/lib/models/customer.model";
+import { toast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import { Console } from "console";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+const CustomerActions = ({ customer }: { customer: Customer }) => {
+  const router = useRouter();
+
+  function deleteACustomer(id: string) {
+    try {
+      const response = deleteCustomer(id);
+      toast({
+        className:
+          "border-green-500 bg-green-50 dark:bg-green-900 dark:border-green-500",
+        title: "Yeah, Customer deleted successfully",
+        description: "All the data related to this customer is deleted.",
+      });
+      router.refresh();
+    } catch (error) {
+      toast({
+        className:
+          "border-red-500 bg-red-50 dark:bg-red-900 dark:border-red-500",
+        title: "Uh oh! Something went wrong.",
+        description: ` There was a problem with your request.`,
+      });
+      console.error(error);
+    }
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem
+          onClick={() => navigator.clipboard.writeText(customer.id)}
+        >
+          Copy payment ID
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>View customer</DropdownMenuItem>
+        <DropdownMenuItem>View payment details</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            deleteACustomer(customer.id);
+          }}
+        >
+          Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
 export type Customer = {
   id: string;
   name: String;
@@ -115,27 +171,7 @@ export const columns: ColumnDef<Customer>[] = [
     cell: ({ row }) => {
       const customer = row.original;
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(customer.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <CustomerActions customer={customer} />;
     },
   },
 ];

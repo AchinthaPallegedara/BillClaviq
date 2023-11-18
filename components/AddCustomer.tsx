@@ -93,6 +93,7 @@ export function AddCustomer() {
       });
 
       router.push("/customers/");
+      router.refresh();
     } catch (error) {
       toast({
         className:
