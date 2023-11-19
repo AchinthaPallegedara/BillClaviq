@@ -24,7 +24,7 @@ const page = () => {
             href={"/invoice/create"}
             className="w-full sm:w-auto  mt-4 sm:mt-0"
           >
-            <Button className="w-full sm:w-auto  mt-4 sm:mt-0">
+            <Button className="w-full sm:w-auto   sm:mt-0">
               <Plus className="me-1.5 h-[17px] w-[17px]" />
               Add Invoice
             </Button>

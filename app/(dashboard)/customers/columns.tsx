@@ -15,7 +15,6 @@ import {
 import { deleteCustomer } from "@/lib/models/customer.model";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { Console } from "console";
 
 const CustomerActions = ({ customer }: { customer: Customer }) => {
   const router = useRouter();

@@ -58,8 +58,8 @@ const formSchema = z.object({
 
 export function AddCustomer() {
   const router = useRouter();
-  const { user } = useUser();
   const { toast } = useToast();
+  const { user } = useUser();
   let userId: string;
   if (user) {
     userId = user.id;
@@ -122,7 +122,9 @@ export function AddCustomer() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Customer Name</FormLabel>
+                    <FormLabel>
+                      Customer Name <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input placeholder="Achintha Pallegedara" {...field} />
                     </FormControl>
@@ -157,7 +159,9 @@ export function AddCustomer() {
                 render={({ field }) => (
                   <>
                     <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
+                      <FormLabel>
+                        Phone Number <span className="text-red-500">*</span>
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="tel"

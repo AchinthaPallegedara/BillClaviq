@@ -81,7 +81,7 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Global search..."
+          placeholder="Search anything..."
           value={globalSearch}
           onChange={(e) => setGlobalSearch(e.target.value)}
           className="max-w-sm"

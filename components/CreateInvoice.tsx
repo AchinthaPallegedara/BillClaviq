@@ -23,7 +23,7 @@ import { toast } from "react-hot-toast";
 
 import { Textarea } from "@/components/ui/textarea";
 
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Select,
@@ -68,7 +68,11 @@ import {
 } from "@/components/ui/popover";
 import { Check, ChevronsUpDown, PlusCircle } from "lucide-react";
 import { groups } from "@/constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { User } from "@prisma/client";
+import { useUser } from "@clerk/nextjs";
+import { getUserById } from "@/lib/models/user.model";
+import { is } from "date-fns/locale";
 
 type Team = (typeof groups)[number]["teams"][number];
 
@@ -85,12 +89,34 @@ const invoiceItems = [{ item: "", description: "", quantity: 1, price: "" }];
 
 const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
   const [reset, setReset] = useState({});
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const [open, setOpen] = React.useState(false);
   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
   const [selectedTeam, setSelectedTeam] = React.useState<Team>(
     groups[0].teams[0]
   );
+  const { user } = useUser();
+  const [userInfo, setUserInfo] = useState<User | null>(null);
+
+  let userId: string;
+  if (user) {
+    userId = user.id;
+  } else {
+    userId = "";
+  }
+
+  useEffect(() => {
+    async function fetchCompanyInfo() {
+      try {
+        const data = await getUserById(userId);
+        setUserInfo(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    fetchCompanyInfo();
+  }, [userId]);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof invoiceFormSchema>>({
@@ -99,7 +125,7 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
       fromName: "Claviq",
       fromAddress:
         "70/1, Pallegedara, Mahakandegama, Wellawa, Kurunegala, 60570, Sri Lanka",
-      fromPhone: "+94 76 55 63 418",
+      fromPhone: "No phone number",
       toName: "",
       toAddress: "",
       toPhone: "",
@@ -211,14 +237,16 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
                               </SelectLabel>
                               <SelectItem value="free">
                                 <span className="font-medium">
-                                  Achintha Pallegedara
+                                  {userInfo?.userName || "Loading..."}
                                 </span>
                               </SelectItem>
                               <SelectLabel className="text-muted-foreground ml-[-20px] text-[12px]">
                                 Company name
                               </SelectLabel>
                               <SelectItem value="pro">
-                                <span className="font-medium">Claviq</span>
+                                <span className="font-medium">
+                                  {userInfo?.companyName || "Loading..."}
+                                </span>
                               </SelectItem>
                             </SelectGroup>
                           </SelectContent>
@@ -243,6 +271,7 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
                           type="tel"
                           onInput={phoneMask}
                           {...field}
+                          value={userInfo?.phoneNumber || "Loading..."}
                         />
                       </FormControl>
                     </FormItem>
@@ -261,6 +290,7 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
                           disabled
                           placeholder="Enter your address"
                           {...field}
+                          value={userInfo?.address || "Loading..."}
                         />
                       </FormControl>
 

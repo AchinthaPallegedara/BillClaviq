@@ -7,10 +7,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Company {
+model User {
   id          String     @id @default(uuid()) @map("_id")
-  clerkId     String
-  name        String
+  clerkId     String     @unique
+  userName    String
+  companyName String?
   phoneNumber String?
   address     String?
   logo        String?
@@ -29,7 +30,7 @@ model Customer {
   email        String?
   moreInfo     String?
   invoice      Invoice[]
-  customerOf   Company   @relation(fields: [customerOfId], references: [id], onDelete: Cascade)
+  customerOf   User      @relation(fields: [customerOfId], references: [id], onDelete: Cascade)
   customerOfId String
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
@@ -48,7 +49,7 @@ model Invoice {
   total         Float
   to            Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
   customerId    String
-  from          Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  from          User          @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId     String
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
