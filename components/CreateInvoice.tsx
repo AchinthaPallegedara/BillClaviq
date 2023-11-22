@@ -69,7 +69,7 @@ import {
 import { Check, ChevronsUpDown, PlusCircle } from "lucide-react";
 import { groups } from "@/constants";
 import { useEffect, useState } from "react";
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { useUser } from "@clerk/nextjs";
 import { getUserById } from "@/lib/models/user.model";
 
