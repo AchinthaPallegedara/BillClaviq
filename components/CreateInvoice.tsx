@@ -72,7 +72,6 @@ import { useEffect, useState } from "react";
 import { User } from "@prisma/client";
 import { useUser } from "@clerk/nextjs";
 import { getUserById } from "@/lib/models/user.model";
-import { is } from "date-fns/locale";
 
 type Team = (typeof groups)[number]["teams"][number];
 
