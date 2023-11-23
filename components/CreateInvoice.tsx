@@ -23,7 +23,7 @@ import { toast } from "react-hot-toast";
 
 import { Textarea } from "@/components/ui/textarea";
 
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Select,
@@ -66,10 +66,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Check, ChevronsUpDown, PlusCircle } from "lucide-react";
+import { Check, PlusCircle } from "lucide-react";
 import { groups } from "@/constants";
 import { useEffect, useState } from "react";
-import type { User } from "@prisma/client";
+import { User as UserType } from "@prisma/client";
 import { useUser } from "@clerk/nextjs";
 import { getUserById } from "@/lib/models/user.model";
 
@@ -95,7 +95,8 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
     groups[0].teams[0]
   );
   const { user } = useUser();
-  const [userInfo, setUserInfo] = useState<User | null>(null);
+
+  const [userInfo, setUserInfo] = useState<UserType | null>(null);
 
   let userId: string;
   if (user) {
