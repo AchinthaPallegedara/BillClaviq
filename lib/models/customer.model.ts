@@ -1,6 +1,7 @@
 "use server";
 
 import { Customer } from "@/app/(dashboard)/customers/columns";
+
 import { PrismaClient } from "@prisma/client";
 
 interface customerCreateProps {
@@ -28,10 +29,13 @@ export async function createCustomer(customer: customerCreateProps) {
   }
 }
 
-export async function getCustomers(): Promise<Customer[]> {
+export async function getCustomers(customerOfId: String): Promise<Customer[]> {
   try {
     const prisma = new PrismaClient();
     const customers = await prisma.customer.findMany({
+      where: {
+        customerOfId: customerOfId as string,
+      },
       select: {
         id: true,
         name: true,

@@ -9,9 +9,14 @@ import React from "react";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import { getCustomers } from "@/lib/models/customer.model";
+import { currentUser } from "@clerk/nextjs";
 
-export default async function page() {
-  const data = await getCustomers();
+export default async function Page() {
+  const user = await currentUser();
+  if (!user) {
+    return <div>Please sign in</div>;
+  }
+  const data = await getCustomers(user?.id);
 
   return (
     <>
