@@ -67,13 +67,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Check, PlusCircle } from "lucide-react";
-import { groups } from "@/constants";
 import { useEffect, useState } from "react";
 import { User as UserType } from "@prisma/client";
 import { useUser } from "@clerk/nextjs";
 import { getUserById } from "@/lib/models/user.model";
-
-type Team = (typeof groups)[number]["teams"][number];
+import { getCustomers } from "@/lib/models/customer.model";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
@@ -83,6 +81,17 @@ interface TeamSwitcherProps extends PopoverTriggerProps {
   id?: string;
   record?: InvoiceFormTypes;
 }
+type Team = {
+  label: string;
+  value: string;
+  phone: string;
+  address: string;
+};
+
+type Group = {
+  label: string;
+  teams: Team[];
+};
 
 const invoiceItems = [{ item: "", description: "", quantity: 1, price: "" }];
 
@@ -91,12 +100,12 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
   const [isLoading, setLoading] = useState(true);
   const [open, setOpen] = React.useState(false);
   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
-  const [selectedTeam, setSelectedTeam] = React.useState<Team>(
-    groups[0].teams[0]
-  );
+
   const { user } = useUser();
 
   const [userInfo, setUserInfo] = useState<UserType | null>(null);
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [selectedTeam, setSelectedTeam] = React.useState<Team | null>(null);
 
   let userId: string;
   if (user) {
@@ -117,6 +126,54 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
 
     fetchCompanyInfo();
   }, [userId]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch customer data
+        const customers = await getCustomers(userId);
+
+        // Transform customer data into the desired format
+        const personTeams: Team[] = customers.map((customer) => ({
+          label: String(customer.name),
+          value: String(customer.name),
+          phone: String(customer.phone),
+          address: String(customer.address),
+        }));
+
+        const companyTeams: Team[] = customers.map((customer) => ({
+          label: String(customer.company),
+          value: String(customer.company),
+          phone: String(customer.phone),
+          address: String(customer.address),
+        }));
+
+        // Set the groups state based on the transformed data
+        setGroups([
+          {
+            label: "Person",
+            teams: personTeams,
+          },
+          {
+            label: "Company",
+            teams: companyTeams,
+          },
+        ]);
+        // Set the selectedTeam to the first team in the first group
+        if (personTeams.length > 0) {
+          setSelectedTeam(personTeams[0]);
+        } else if (companyTeams.length > 0) {
+          setSelectedTeam(companyTeams[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching customer data:", error);
+      }
+    };
+
+    fetchData(); // Call the fetchData function when the component mounts
+
+    // You can add dependencies to the dependency array if needed
+  }, [userId]); // useEffect will only run once when the component mounts
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof invoiceFormSchema>>({
@@ -168,43 +225,6 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
         ...item,
       }))
     : invoiceItems;
-
-  const phoneMask = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const input = event.target.value;
-    let formattedNum = "";
-    let isPlus = false;
-    let digitCount = 0;
-
-    for (let i = 0; i < input.length; i++) {
-      const char = input[i];
-
-      if (char === "+") {
-        isPlus = true;
-        formattedNum = "+";
-        digitCount = 0;
-      } else if (/[0-9]/.test(char)) {
-        formattedNum += char;
-        digitCount++;
-
-        if (isPlus) {
-          if (
-            digitCount === 2 ||
-            digitCount === 4 ||
-            digitCount === 6 ||
-            digitCount === 8
-          ) {
-            formattedNum += " ";
-          }
-        } else {
-          if (digitCount === 2 || digitCount === 4 || digitCount === 6) {
-            formattedNum += " ";
-          }
-        }
-      }
-    }
-
-    event.target.value = formattedNum;
-  };
 
   return (
     <Form {...form}>
@@ -269,7 +289,6 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
                         <Input
                           disabled
                           type="tel"
-                          onInput={phoneMask}
                           {...field}
                           value={userInfo?.phoneNumber || "Loading..."}
                         />
@@ -322,7 +341,7 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
                               <Input
                                 type="search"
                                 placeholder={"Enter the name"}
-                                value={selectedTeam.label}
+                                value={selectedTeam?.label || ""}
                                 role="combobox"
                                 aria-expanded={open}
                                 readOnly
@@ -361,7 +380,7 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
                                           <Check
                                             className={cn(
                                               "ml-auto h-4 w-4",
-                                              selectedTeam.value === team.value
+                                              selectedTeam?.value === team.value
                                                 ? "opacity-100"
                                                 : "opacity-0"
                                             )}
@@ -433,6 +452,7 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
                   </>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="toPhone"
@@ -443,9 +463,10 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
                       <FormControl>
                         <Input
                           type="tel"
-                          onInput={phoneMask}
                           placeholder="Phone Number"
                           {...field}
+                          value={selectedTeam?.phone || ""}
+                          readOnly
                         />
                       </FormControl>
 
@@ -462,7 +483,12 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
                     <FormItem className="col-span-2">
                       <FormLabel>Address</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Enter your address" {...field} />
+                        <Textarea
+                          placeholder="Enter your address"
+                          {...field}
+                          value={selectedTeam?.address || ""}
+                          readOnly
+                        />
                       </FormControl>
 
                       <FormMessage />

@@ -16,9 +16,18 @@ export const invoiceFormSchema = z.object({
   fromName: z.string().min(1, { message: "This field is required" }),
   fromAddress: z.string().min(1, { message: "This field is required" }),
   fromPhone: z.string().min(1, { message: "Invalid phone number" }).optional(),
-  toName: z.string().min(1, { message: "This field is required" }),
-  toAddress: z.string().min(1, { message: "This field is required" }),
-  toPhone: z.string().min(1, { message: "Invalid phone number" }).optional(),
+  toName: z
+    .string()
+    // .min(1, { message: "This field is required" })
+    .optional(),
+  toAddress: z
+    .string()
+    // .min(1, { message: "This field is required" })
+    .optional(),
+  toPhone: z
+    .string()
+    // .min(1, { message: "Invalid phone number" })
+    .optional(),
   invoiceNumber: z.string({
     required_error: "This field is required",
   }),

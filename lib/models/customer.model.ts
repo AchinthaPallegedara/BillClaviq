@@ -53,6 +53,35 @@ export async function getCustomers(customerOfId: String): Promise<Customer[]> {
     throw error;
   }
 }
+interface CustomerName {
+  id: string;
+  name: string;
+}
+
+export async function getCustomersName(
+  customerOfId: string
+): Promise<CustomerName[]> {
+  const prisma = new PrismaClient();
+
+  try {
+    const customers = (await prisma.customer.findMany({
+      where: {
+        customerOfId: customerOfId,
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    })) as CustomerName[];
+
+    return customers;
+  } catch (error) {
+    console.error("Error in getCustomersName:", error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
 
 export async function deleteCustomer(id: string) {
   try {
