@@ -71,7 +71,9 @@ import { useEffect, useState } from "react";
 import { User as UserType } from "@prisma/client";
 import { useUser } from "@clerk/nextjs";
 import { getUserById } from "@/lib/models/user.model";
-import { getCustomers } from "@/lib/models/customer.model";
+import { createCustomer, getCustomers } from "@/lib/models/customer.model";
+import { useRouter } from "next/navigation";
+import { useToast } from "./ui/use-toast";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
@@ -106,6 +108,8 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
   const [userInfo, setUserInfo] = useState<UserType | null>(null);
   const [groups, setGroups] = useState<Group[]>([]);
   const [selectedTeam, setSelectedTeam] = React.useState<Team | null>(null);
+  const router = useRouter();
+  const { toast } = useToast();
 
   let userId: string;
   if (user) {
@@ -198,7 +202,6 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
 
   // 2. Define a submit handler.
   const onSubmit: SubmitHandler<InvoiceFormTypes> = (data) => {
-    toast.success(<p>Invoice successfully {id ? "updated" : "created"}</p>);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -225,6 +228,53 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
         ...item,
       }))
     : invoiceItems;
+
+  const [customerData, setCustomerData] = useState<{
+    name: string;
+    phone: string;
+    address: string;
+    company: string;
+  }>({
+    name: "",
+    phone: "",
+    address: "",
+    company: "",
+  });
+
+  const handleInputChange = (field: string, value: string) => {
+    setCustomerData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+  // Handler for submitting the form
+  const handleSubmit = () => {
+    try {
+      createCustomer({
+        ...customerData,
+        customerOfId: userId,
+      });
+      router.refresh();
+      // Close the dialog or perform additional actions
+      setShowNewTeamDialog(false);
+      toast({
+        className:
+          "border-green-500 bg-green-50 dark:bg-green-900 dark:border-green-500",
+        title: "Yeah, Customer added successfully",
+        description: "You can view the customer in the customer list.",
+      });
+
+      router.refresh();
+    } catch (error) {
+      toast({
+        className:
+          "border-red-500 bg-red-50 dark:bg-red-900 dark:border-red-500",
+        title: "Uh oh! Something went wrong.",
+        description: ` There was a problem with your request.`,
+      });
+      console.error(error);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -423,13 +473,49 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
                                   <Input
                                     id="Cus_name"
                                     placeholder="Achintha Hirudika."
+                                    value={customerData.name}
+                                    onChange={(e) =>
+                                      handleInputChange("name", e.target.value)
+                                    }
                                   />
                                 </div>
                                 <div className="space-y-2">
                                   <Label htmlFor="plan">Company name</Label>
                                   <Input
-                                    id="Com_name"
-                                    placeholder="Claviq Inc."
+                                    id="Cus_company"
+                                    placeholder="Claviq"
+                                    value={customerData.company}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        "company",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="plan">Phone Number</Label>
+                                  <Input
+                                    id="Cus_phone"
+                                    placeholder="0765563418"
+                                    value={customerData.phone}
+                                    onChange={(e) =>
+                                      handleInputChange("phone", e.target.value)
+                                    }
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="plan">Address</Label>
+                                  <Textarea
+                                    id="Cus_address"
+                                    placeholder="70/1, Pallegedara, Mahakandegama, Wellawa, Kurunegala, 60570, Sri Lanka"
+                                    value={customerData.address}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        "address",
+                                        e.target.value
+                                      )
+                                    }
                                   />
                                 </div>
                               </div>
@@ -441,7 +527,9 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
                               >
                                 Cancel
                               </Button>
-                              <Button type="submit">Continue</Button>
+                              <Button type="submit" onClick={handleSubmit}>
+                                Add customer
+                              </Button>
                             </DialogFooter>
                           </DialogContent>
                         </Dialog>

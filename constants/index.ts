@@ -1,4 +1,4 @@
-import { Building2, Layout, Receipt, Users } from "lucide-react";
+import { Building2, CalendarDays, Layout, Receipt, Users } from "lucide-react";
 
 export const sidebarLinks = [
   {
@@ -16,6 +16,11 @@ export const sidebarLinks = [
     icon: Users,
     lable: "Customers",
     href: "/customers",
+  },
+  {
+    icon: CalendarDays,
+    lable: "Event Calendar",
+    href: "/event-calendar",
   },
   {
     icon: Building2,
@@ -37,6 +42,20 @@ export const invoicePageHeader = {
     },
     {
       name: "Create",
+    },
+  ],
+};
+
+export const calanderPageHeader = {
+  title: "Event Calendar",
+  breadcrumb: [
+    {
+      href: "/",
+      name: "Home",
+    },
+    {
+      href: "/event-calendar",
+      name: "Event Calendar",
     },
   ],
 };
@@ -91,60 +110,3 @@ export const customerAddPageHeader = {
     },
   ],
 };
-
-export const groups = [
-  {
-    label: "Person",
-    teams: [
-      {
-        label: "Alicia Koch",
-        value: "personal",
-      },
-    ],
-  },
-  {
-    label: "Company",
-    teams: [
-      {
-        label: "Acme Inc.",
-        value: "acme-inc",
-      },
-      {
-        label: "Monsters Inc.",
-        value: "monsters",
-      },
-      {
-        label: "Tech Solutions",
-        value: "tech-solutions",
-      },
-      {
-        label: "Galactic Innovators",
-        value: "galactic-innovators",
-      },
-      {
-        label: "Creative Minds",
-        value: "creative-minds",
-      },
-      {
-        label: "Alpha Developers",
-        value: "alpha-developers",
-      },
-      {
-        label: "Solar Explorers",
-        value: "solar-explorers",
-      },
-      {
-        label: "Digital Pioneers",
-        value: "digital-pioneers",
-      },
-      {
-        label: "Infinite Horizons",
-        value: "infinite-horizons",
-      },
-      {
-        label: "Data Wizards",
-        value: "data-wizards",
-      },
-    ],
-  },
-];
