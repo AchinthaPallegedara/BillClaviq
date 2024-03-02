@@ -19,8 +19,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { toast } from "react-hot-toast";
-
 import { Textarea } from "@/components/ui/textarea";
 
 import { format } from "date-fns";
@@ -424,7 +422,7 @@ const CreateInvoice = ({ id, record, className }: TeamSwitcherProps) => {
                                               alt={team.label}
                                               className="grayscale"
                                             />
-                                            <AvatarFallback>SC</AvatarFallback>
+                                            <AvatarFallback>CQ</AvatarFallback>
                                           </Avatar>
                                           {team.label}
                                           <Check
