@@ -15,43 +15,45 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/phone-input";
-import { createUser } from "@/lib/models/user.model";
+import { createUser, updateUser } from "@/lib/models/user.model";
 import { redirect } from "next/navigation";
+import { User } from "@prisma/client";
 import { useToast } from "./ui/use-toast";
 
 interface Props {
-  clerkId: string;
+  user: User;
 }
 
-const UserSettings = ({ clerkId }: Props) => {
+const EditUserSettings = ({ user }: Props) => {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof userAddformSchema>>({
     resolver: zodResolver(userAddformSchema),
 
     defaultValues: {
-      cName: "",
-      cEmail: "",
-      cPhone: "",
-      cAddress: "",
-      cCity: "",
-      cProvince: "",
-      cPostalCode: "",
-      cCountry: "Sri Lanka",
-      cWebsite: "",
-      cLogo: "https://claviq.com/logo.png",
+      cName: user.cName,
+      cEmail: user.cEmail,
+      cPhone: user.cPhone,
+      cAddress: user.cAddress,
+      cCity: user.cCity,
+      cProvince: user.cProvince,
+      cPostalCode: user.cPostalCode,
+      cCountry: user.cCountry,
+      cWebsite: user.cWebsite || "",
+      cLogo: user.cLogo || "https://claviq.com/logo.png",
     },
   });
   async function onSubmit(values: z.infer<typeof userAddformSchema>) {
     try {
-      await createUser(clerkId, values);
+      await updateUser(user.clerkId, values);
       toast({
-        title: "Account created.",
-        description: "sucessfully created your business account for you.",
+        title: "Account updated.",
+        description: "sucessfully updated your business account",
       });
-      redirect("/dashboard");
+      //   await createUser(clerkId, values);
+      //   redirect("/dashboard");
     } catch (error) {
       toast({
-        title: "Account create failed.",
+        title: "Account update failed.",
         description: "Failed to update your business account ",
       });
       console.error("Error creating user:", error);
@@ -210,7 +212,7 @@ const UserSettings = ({ clerkId }: Props) => {
           />
           <div className="w-full flex">
             <Button type="submit" className="ml-auto my-5 px-10">
-              Submit
+              Update
             </Button>
           </div>
         </form>
@@ -219,4 +221,4 @@ const UserSettings = ({ clerkId }: Props) => {
   );
 };
 
-export default UserSettings;
+export default EditUserSettings;

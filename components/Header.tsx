@@ -18,7 +18,7 @@ function HeaderMenuRight() {
 const Header = () => {
   return (
     <header className="sticky top-0 z-50 flex items-center bg-gray-0/80 px-4 py-4  backdrop-blur-xl dark:bg-black md:px-5 lg:px-6 2xl:py-5 3xl:px-8 4xl:px-10  ">
-      <div className="flex w-full max-w-2xl items-center lg:hidden">
+      <div className="flex w-full max-w-2xl items-center xl:hidden">
         <MobileMenu />
 
         <Link href="/" className="me-4 w-9 shrink-0 lg:me-5 xl:hidden">

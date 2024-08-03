@@ -53,3 +53,23 @@ export async function createUser(clerkId: string, data: any) {
     throw error;
   }
 }
+
+export async function updateUser(clerkId: string, data: any) {
+  try {
+    const prisma = new PrismaClient();
+    const user = await prisma.user.update({
+      where: {
+        clerkId: clerkId,
+      },
+      data: {
+        ...data,
+      },
+    });
+    await prisma.$disconnect();
+
+    return user;
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
+}

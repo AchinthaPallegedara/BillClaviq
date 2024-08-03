@@ -36,6 +36,7 @@ export async function getCustomers(customerOfId: String): Promise<Customer[]> {
       where: {
         customerOfId: customerOfId as string,
       },
+      take: 20, //limit 20
       select: {
         id: true,
         name: true,
