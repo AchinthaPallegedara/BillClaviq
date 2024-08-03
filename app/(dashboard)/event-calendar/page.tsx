@@ -2,9 +2,18 @@ import PageHeader from "@/components/Page-Header";
 import ExportButton from "@/components/export-button";
 import { Button } from "@/components/ui/button";
 import { calanderPageHeader } from "@/constants";
+import { checkIsNewUser } from "@/lib/models/user.model";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import React from "react";
 
-const page = () => {
+const page = async () => {
+  const { userId }: { userId: string | null } = auth();
+
+  if (!userId) return null;
+  if (await checkIsNewUser(userId)) {
+    return redirect("/settings");
+  }
   return (
     <>
       <PageHeader

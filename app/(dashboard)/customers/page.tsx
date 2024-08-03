@@ -2,7 +2,7 @@ import PageHeader from "@/components/Page-Header";
 import ExportButton from "@/components/export-button";
 import { Button } from "@/components/ui/button";
 import { customersPageHeader } from "@/constants";
-import { customerData } from "@/data/customer-data";
+
 import { UserPlus } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -10,8 +10,17 @@ import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import { getCustomers } from "@/lib/models/customer.model";
 import { currentUser } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
+import { checkIsNewUser } from "@/lib/models/user.model";
+import { redirect } from "next/navigation";
 
 export default async function Page() {
+  const { userId }: { userId: string | null } = auth();
+
+  if (!userId) return null;
+  if (await checkIsNewUser(userId)) {
+    return redirect("/settings");
+  }
   const user = await currentUser();
   if (!user) {
     return <div>Please sign in</div>;
@@ -25,11 +34,11 @@ export default async function Page() {
         breadcrumb={customersPageHeader.breadcrumb}
       >
         <div className="mt-4 flex items-center gap-3 @lg:mt-0">
-          <ExportButton
+          {/* <ExportButton
             data={customerData}
             fileName="invoice_data"
             header="Id,Name,Company,Email,Phone Number,Address,Avatar,CreatedAt"
-          />
+          /> */}
           <Link
             href={"/customers/add-new"}
             className="w-full sm:w-auto  mt-4 sm:mt-0"

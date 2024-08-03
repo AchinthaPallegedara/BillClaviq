@@ -18,3 +18,38 @@ export async function getUserById(clerkId: string) {
     throw error;
   }
 }
+
+export async function checkIsNewUser(clerkId: string) {
+  try {
+    const prisma = new PrismaClient();
+    const user = await prisma.user.findUnique({
+      where: {
+        clerkId: clerkId,
+      },
+    });
+    await prisma.$disconnect();
+
+    return !user; // Return true if user does not exist, false otherwise
+  } catch (error) {
+    console.error("Error checking user:", error);
+    throw error;
+  }
+}
+
+export async function createUser(clerkId: string, data: any) {
+  try {
+    const prisma = new PrismaClient();
+    const user = await prisma.user.create({
+      data: {
+        clerkId: clerkId,
+        ...data,
+      },
+    });
+    await prisma.$disconnect();
+
+    return user;
+  } catch (error) {
+    console.error("Error creating user:", error);
+    throw error;
+  }
+}

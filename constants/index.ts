@@ -1,4 +1,11 @@
-import { Building2, CalendarDays, Layout, Receipt, Users } from "lucide-react";
+import {
+  Building2,
+  CalendarDays,
+  Layout,
+  Receipt,
+  Settings,
+  Users,
+} from "lucide-react";
 
 export const sidebarLinks = [
   {
@@ -22,10 +29,11 @@ export const sidebarLinks = [
     lable: "Event Calendar",
     href: "/event-calendar",
   },
+
   {
-    icon: Building2,
-    lable: "Business",
-    href: "/business",
+    icon: Settings,
+    lable: "Settings",
+    href: "/settings",
   },
 ];
 

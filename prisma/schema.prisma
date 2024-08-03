@@ -10,11 +10,16 @@ generator client {
 model User {
   id          String     @id @default(uuid()) @map("_id")
   clerkId     String     @unique
-  userName    String
-  companyName String?
-  phoneNumber String?
-  address     String?
-  logo        String?
+  cName       String
+  cEmail      String
+  cPhone      String
+  cAddress    String
+  cCity       String
+  cProvince   String
+  cPostalCode String
+  cCountry    String
+  cWebsite    String?
+  cLogo       String?
   Invoice     Invoice[]
   Customers   Customer[]
   createdAt   DateTime   @default(now())
