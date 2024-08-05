@@ -1,8 +1,8 @@
-import CreateInvoice from "@/components/CreateInvoice";
+import InvoiceCreate from "@/components/invoice/InvoiceCreate";
+import InvoiceStyle1 from "@/components/invoice/InvoiceStyle1";
 import PageHeader from "@/components/Page-Header";
 import { Button } from "@/components/ui/button";
 import { invoicePageHeader } from "@/constants";
-
 import { ArrowDownToLine } from "lucide-react";
 
 const page = () => {
@@ -17,7 +17,9 @@ const page = () => {
           Import
         </Button>
       </PageHeader>
-      <CreateInvoice />
+      <div className="flex items-center justify-center w-full">
+        <InvoiceCreate />
+      </div>
     </>
   );
 };
