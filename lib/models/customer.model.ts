@@ -1,8 +1,7 @@
 "use server";
 
 import { Customer } from "@/app/(dashboard)/customers/columns";
-
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 interface customerCreateProps {
   name: string;
@@ -16,11 +15,9 @@ interface customerCreateProps {
 
 export async function createCustomer(customer: customerCreateProps) {
   try {
-    const prisma = new PrismaClient();
     const newCustomer = await prisma.customer.create({
       data: customer,
     });
-    prisma.$disconnect();
 
     return newCustomer;
   } catch (error) {
@@ -31,7 +28,6 @@ export async function createCustomer(customer: customerCreateProps) {
 
 export async function getCustomers(customerOfId: String): Promise<Customer[]> {
   try {
-    const prisma = new PrismaClient();
     const customers = await prisma.customer.findMany({
       where: {
         customerOfId: customerOfId as string,
@@ -46,7 +42,6 @@ export async function getCustomers(customerOfId: String): Promise<Customer[]> {
         email: true,
       },
     });
-    prisma.$disconnect();
 
     return customers;
   } catch (error) {
@@ -62,8 +57,6 @@ interface CustomerName {
 export async function getCustomersName(
   customerOfId: string
 ): Promise<CustomerName[]> {
-  const prisma = new PrismaClient();
-
   try {
     const customers = (await prisma.customer.findMany({
       where: {
@@ -79,20 +72,16 @@ export async function getCustomersName(
   } catch (error) {
     console.error("Error in getCustomersName:", error);
     throw error;
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
 export async function deleteCustomer(id: string) {
   try {
-    const prisma = new PrismaClient();
     const customer = await prisma.customer.delete({
       where: {
         id: id,
       },
     });
-    prisma.$disconnect();
 
     return customer;
   } catch (error) {

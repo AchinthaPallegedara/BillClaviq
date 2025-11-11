@@ -8,16 +8,16 @@ generator client {
 }
 
 model User {
-  id          String     @id @default(uuid()) @map("_id")
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
   clerkId     String     @unique
-  cName       String
-  cEmail      String
-  cPhone      String
-  cAddress    String
-  cCity       String
-  cProvince   String
-  cPostalCode String
-  cCountry    String
+  cName       String?
+  cEmail      String?
+  cPhone      String?
+  cAddress    String?
+  cCity       String?
+  cProvince   String?
+  cPostalCode String?
+  cCountry    String?
   cWebsite    String?
   cLogo       String?
   Invoice     Invoice[]
@@ -27,7 +27,7 @@ model User {
 }
 
 model Customer {
-  id           String    @id @default(uuid()) @map("_id")
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
   name         String
   company      String?
   phone        String
@@ -36,13 +36,13 @@ model Customer {
   moreInfo     String?
   invoice      Invoice[]
   customerOf   User      @relation(fields: [customerOfId], references: [id], onDelete: Cascade)
-  customerOfId String
+  customerOfId String    @db.ObjectId
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 }
 
 model Invoice {
-  id            String        @id @default(uuid()) @map("_id")
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
   invoiceNumber String        @unique
   issueDate     DateTime
   dueDate       DateTime?
@@ -53,20 +53,20 @@ model Invoice {
   subtotal      Float
   total         Float
   to            Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  customerId    String
+  customerId    String        @db.ObjectId
   from          User          @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  companyId     String
+  companyId     String        @db.ObjectId
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 }
 
 model Items {
-  id          String  @id @default(uuid()) @map("_id")
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   description String?
   quantity    Int     @default(1)
   price       Float
   Invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-  invoiceId   String
+  invoiceId   String  @db.ObjectId
 }
 
 enum InvoiceStatus {
